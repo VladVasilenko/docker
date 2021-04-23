@@ -11,6 +11,10 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+
+    public const CREATED_AT = 'register_at';
+    public const UPDATED_AT = null;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -20,6 +24,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'social_id',
+        'social_type'
     ];
 
     /**
@@ -28,8 +34,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password',
-        'remember_token',
+        'password'
     ];
 
     /**
@@ -38,6 +43,6 @@ class User extends Authenticatable
      * @var array
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'register_at' => 'datetime',
     ];
 }

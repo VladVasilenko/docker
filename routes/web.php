@@ -13,7 +13,6 @@ use Laravel\Socialite\Facades\Socialite;
 | contains the "web" middleware group. Now create something great!
 |
 */
-URL::forceScheme('https');
 
 Route::prefix('dashboard')->group(function () {
     Route::middleware(['auth'])->group(function () {
@@ -29,9 +28,10 @@ Route::get('/auth/redirect', function () {
 
 Route::get('/auth/callback', function () {
     $user = Socialite::driver('facebook')->user();
+    dd($user);
 
     // $user->token
-});
+})->name('FacebookCallback');
 
 Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
