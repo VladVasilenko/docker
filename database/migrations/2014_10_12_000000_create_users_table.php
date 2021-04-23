@@ -15,8 +15,8 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->BigInteger('social_id');
-            $table->unsignedSmallInteger('social_type')->comment('Локальный id соц.сети');
+            $table->BigInteger('social_id')->nullable();
+            $table->unsignedSmallInteger('social_type')->comment('Локальный id соц.сети')->nullable();
             $table->string('name')->nullable();
             $table->string('email')->unique()->nullable();
             $table->string('password')->nullable();
