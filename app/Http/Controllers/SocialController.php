@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SocialRequest;
+use App\Services\SocialAuth\Facebook;
+use App\Services\SocialAuth\SocialAuthAbstract;
 use Illuminate\Http\Request;
 
 use App\Models\User;
@@ -12,33 +15,25 @@ use Illuminate\Support\Facades\Auth;
 
 class SocialController extends Controller
 {
-    public function facebookRedirect()
+    /* @var SocialAuthAbstract */
+    protected $class;
+
+    protected $classes = [
+        'facebook' => Facebook::class
+    ];
+
+    public function __construct(SocialRequest $request)
     {
-        return Socialite::driver('facebook')->redirect();
+        $this->class = $this->classes[$request->socialNetwork];
     }
 
-    public function loginWithFacebook()
+    public function redirect()
     {
-        try {
+        return $this->class::redirectForAuth();
+    }
 
-            $user = Socialite::driver('facebook')->user();
-            $isUser = User::where('social_id', $user->id)->first();
-
-            if($isUser){
-                Auth::login($isUser);
-                return redirect('/');
-            }else{
-                $createUser = User::create([
-                    'social_id' => $user->id,
-                    'social_type' => User::FACEBOOK
-                ]);
-
-                Auth::login($createUser);
-                return redirect('/');
-            }
-
-        } catch (Exception $exception) {
-            dd($exception->getMessage());
-        }
+    public function loginWith()
+    {
+        $this->class::login();
     }
 }

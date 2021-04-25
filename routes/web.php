@@ -1,5 +1,4 @@
 <?php
-
 use App\Http\Controllers\SocialController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
@@ -17,23 +16,21 @@ use Laravel\Socialite\Facades\Socialite;
 */
 
 Route::prefix('dashboard')->group(function () {
-    Route::middleware(['auth'])->group(function () {
+    Route::middleware(['only.admin'])->group(function () {
         Route::get('/', function () {
-            return 'admin';
+            return dd('admin');
         });
     });
 });
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['only.user'])->group(function () {
     Route::get('/', function () {
-        dd(auth()->user());
-        return 'user';
-
+        return dd('user');
     });
 });
 
 
-Route::get('/auth/facebook', [SocialController::class, 'facebookRedirect']);
-Route::get('/auth/facebook/callback', [SocialController::class, 'loginWithFacebook']);
+Route::get('/auth/social', [SocialController::class, 'redirect'])->name('SocialAuth');
+Route::get('/auth/social/callback', [SocialController::class, 'loginWith']);
 
 Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

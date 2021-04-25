@@ -11,8 +11,6 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    public const FACEBOOK = 1;
-
     public const CREATED_AT = 'register_at';
     public const UPDATED_AT = null;
 
@@ -46,4 +44,9 @@ class User extends Authenticatable
     protected $casts = [
         'register_at' => 'datetime',
     ];
+
+    public function socials() {
+
+        return $this->hasMany(UserSocial::class,'user_id','id');
+    }
 }
