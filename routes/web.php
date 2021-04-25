@@ -15,22 +15,23 @@ use Laravel\Socialite\Facades\Socialite;
 |
 */
 
-Route::prefix('dashboard')->group(function () {
-    Route::middleware(['only.admin'])->group(function () {
-        Route::get('/', function () {
-            return dd('admin');
-        });
-    });
+Route::get('/social/callback', [SocialController::class, 'loginWith'])->name('SocialCall');
+Route::get('/social', [SocialController::class, 'redirect'])->name('SocialAuth');
+
+Route::get('/', function (){
+    return 'index';
 });
-Route::middleware(['only.user'])->group(function () {
+
+Route::middleware(['web'])->prefix('dashboard')->group(function () {
     Route::get('/', function () {
-        return dd('user');
-    });
+        dd('admin');
+    })->name('dashboard.index');
 });
-
-
-Route::get('/auth/social', [SocialController::class, 'redirect'])->name('SocialAuth');
-Route::get('/auth/social/callback', [SocialController::class, 'loginWith']);
+Route::middleware(['web'])->prefix('profile')->group(function () {
+    Route::get('/', function () {
+        dd('user');
+    })->name('user.index');
+});
 
 Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -17,10 +17,8 @@ class OnlyAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-        if(!Auth::check() || !Auth::user()->is_admin) {
-
-            return redirect('/');
-        }
+        if(!Auth::check()) return redirect('/login');
+        if(!Auth::user()->is_admin) return redirect('/profile');
 
         return $next($request);
     }

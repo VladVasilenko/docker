@@ -7,6 +7,7 @@ namespace App\Services\SocialAuth;
 use App\Models\User;
 use App\Models\UserSocial;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 use Exception;
 
@@ -33,7 +34,7 @@ abstract class SocialAuthAbstract
         }
 
         Auth::login($user);
-        return redirect('/home');
+        return redirect()->route('user.index');
 
     }
 
