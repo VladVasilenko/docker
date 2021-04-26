@@ -20,7 +20,13 @@ abstract class SocialAuthAbstract
 
     public static function login()
     {
-        $socialUser = Socialite::driver(static::$socialNetwork)->user();
+        try {
+            $socialUser = Socialite::driver(static::$socialNetwork)->user();
+            session(['user_token' => $socialUser->token]);
+        } catch (\Exception $e) {
+            return redirect('/login');
+        }
+
         $user = UserSocial::query()->with('user')->firstWhere('social_id', $socialUser->id);
 
         if($user){

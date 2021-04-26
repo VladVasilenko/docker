@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\AuthSocial;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\SocialRequest;
 use App\Services\SocialAuth\Facebook;
 use App\Services\SocialAuth\SocialAuthAbstract;
@@ -9,7 +10,7 @@ use App\Services\SocialAuth\SocialAuthAbstract;
 class SocialController extends Controller
 {
     /* @var SocialAuthAbstract */
-    protected $class;
+    protected $class = 'facebook';
 
     protected $classes = [
         'facebook' => Facebook::class
@@ -27,6 +28,6 @@ class SocialController extends Controller
 
     public function loginWith()
     {
-        $this->class::login();
+        return $this->class::login();
     }
 }

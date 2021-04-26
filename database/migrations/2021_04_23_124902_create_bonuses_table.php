@@ -15,7 +15,7 @@ class CreateBonusesTable extends Migration
     {
         Schema::create('bonuses', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('available_count');
+            $table->unsignedInteger('available_count')->nullable();
             $table->boolean('is_limited');
         });
     }

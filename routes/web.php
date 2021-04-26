@@ -1,5 +1,7 @@
 <?php
-use App\Http\Controllers\SocialController;
+
+use App\Http\Controllers\AuthSocial\SocialController;
+use App\Http\Controllers\Profile\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 use Laravel\Socialite\Facades\Socialite;
@@ -14,24 +16,22 @@ use Laravel\Socialite\Facades\Socialite;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Auth::routes();
 
 Route::get('/social/callback', [SocialController::class, 'loginWith'])->name('SocialCall');
 Route::get('/social', [SocialController::class, 'redirect'])->name('SocialAuth');
 
-Route::get('/', function (){
-    return 'index';
+Route::middleware(['only.user'])->group(function () {
+    Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 });
 
-Route::middleware(['web'])->prefix('dashboard')->group(function () {
+Route::middleware(['only.admin'])->prefix('dashboard')->group(function () {
     Route::get('/', function () {
         dd('admin');
     })->name('dashboard.index');
 });
-Route::middleware(['web'])->prefix('profile')->group(function () {
-    Route::get('/', function () {
-        dd('user');
-    })->name('user.index');
+Route::middleware(['only.user'])->prefix('profile')->group(function () {
+    Route::get('/', [ProfileController::class, 'index'] )->name('user.index');
+    Route::get('/get_bonus', [ProfileController::class, 'setBonus'] )->name('user.setBonus');
 });
-
-Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

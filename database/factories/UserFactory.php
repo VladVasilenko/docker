@@ -26,6 +26,7 @@ class UserFactory extends Factory
             'name' => 'admin',
             'email' => 'admin@test.com',
             'password' => bcrypt('000000'), // password
+            'is_admin' => true,
         ];
     }
 
