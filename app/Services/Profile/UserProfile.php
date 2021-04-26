@@ -3,17 +3,15 @@
 
 namespace App\Services\Profile;
 
-
 use App\Models\Bonus;
-use App\Models\UsersBonuses;
 use App\Services\Bonus\UserBonusService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Laravel\Socialite\Facades\Socialite;
+use phpDocumentor\Reflection\Types\Mixed_;
 
 class UserProfile
 {
-
     /**
      * @return object
      */
@@ -25,20 +23,23 @@ class UserProfile
         $information->userName = $user->getName();
         $information->userEmail = $user->getEmail();
         $information->userPhoto = $user->getAvatar() . "&access_token=$user->token";
-        $information->hasBonus = static::hasBonus();
+        $information->hasBonus = self::hasBonus();
 
         return $information;
 
     }
 
     /**
-     * @return bool
+     * @return mixed
      */
-    public static function hasBonus() : bool
+    public static function hasBonus()
     {
-        $hasBonus = UsersBonuses::query()->where('user_id',Auth::user()->id)->first();
+        $hasBonus = Bonus::whereHas('user', function ($query) {
+            return $query->where('user_id', Auth::user()->id);
+        })->first();
         if ($hasBonus) {
-            return true;
+            $bonus = new UserBonusService($hasBonus);
+            return $bonus->bonusName;
         } else {
             return false;
         }
@@ -52,12 +53,8 @@ class UserProfile
             $bonusService = new UserBonusService($bonus);
             if (!static::hasBonus()) {
                 $bonusService->setBonus();
-                return $bonusService->getName();
-            } else {
-                return $bonusService->getName();
             }
         }
-
     }
 
 

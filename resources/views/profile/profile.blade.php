@@ -16,10 +16,9 @@
     <a href="{{ route('user.setBonus') }}">
         Получить бонус
     </a>
+    @else
+    <p>Бонус:{{$info->hasBonus}}</p>
     @endif
-@if(isset($bonus))
-    {{$bonus}}
-@endif
 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
     @csrf
 </form>

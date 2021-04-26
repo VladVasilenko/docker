@@ -12,17 +12,15 @@ use Laravel\Socialite\Facades\Socialite;
 class ProfileController extends Controller
 {
 
-    public function index() {
+    public function index()
+    {
 
       return view('profile.profile', ['info' => UserProfile::info()]);
     }
 
-    public function setBonus() {
-
-        return view('profile.profile',[
-            'bonus' => UserProfile::setBonus(),
-            'info' => UserProfile::info()
-        ]);
-
+    public function setBonus()
+    {
+        UserProfile::setBonus();
+        return $this->index();
     }
 }

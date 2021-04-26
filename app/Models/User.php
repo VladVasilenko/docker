@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -45,8 +47,19 @@ class User extends Authenticatable
         'register_at' => 'datetime',
     ];
 
-    public function socials() {
+    /**
+     * @return HasMany
+     */
+    public function socials() : HasMany {
 
         return $this->hasMany(UserSocial::class,'user_id','id');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function bonus() : BelongsToMany {
+
+        return $this->belongsToMany(Bonus::class,'users_bonuses');
     }
 }

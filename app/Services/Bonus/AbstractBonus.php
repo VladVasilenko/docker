@@ -1,24 +1,25 @@
 <?php
 
 
-namespace App\Interfaces\Bonus;
+namespace App\Services\Bonus;
 
 
 use App\Models\Bonus;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 
 abstract class AbstractBonus implements BonusInterface
 {
     /** @var string */
-    protected $bonusName;
+    public $bonusName;
     /** @var int */
     protected $availableCount;
-    /** @var Bonus */
+    /** @var Model */
     protected $bonus;
 
-    protected function __construct(Bonus $bonus)
+    protected function __construct(Model $bonus = null)
     {
-        $this->bonus = $bonus;
+        $this->bonus = $bonus ? $bonus :  self::getDefaultModel();
         $this->bonusName = __('bonuses.names.'.$bonus->id);
         $this->availableCount = $bonus->available_count;
     }
@@ -30,7 +31,7 @@ abstract class AbstractBonus implements BonusInterface
         return $this->bonusName;
     }
 
-    abstract public function setBonus();
+    abstract public function setBonus() : void;
 
     /**
      * @return bool
@@ -55,10 +56,9 @@ abstract class AbstractBonus implements BonusInterface
     /**
      * @return Bonus
      */
-    public static function getBonus() : Bonus
+    public  function getBonus() : Model
     {
-        return Bonus::query()->where('available_count','!=','0')->inRandomOrder()->first();
-
+        return $this->bonus->query()->where('available_count','!=',0)->inRandomOrder()->first();
     }
 
     /**
@@ -69,5 +69,12 @@ abstract class AbstractBonus implements BonusInterface
         $this->bonus->decrement('available_count');
     }
 
+    /**
+     * @return Model
+     */
+    public function getDefaultModel() : Model
+    {
+        return Bonus::query()->where('available_count','!=',0)->inRandomOrder()->first();
+    }
 
 }

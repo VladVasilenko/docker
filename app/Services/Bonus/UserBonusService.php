@@ -4,31 +4,32 @@
 namespace App\Services\Bonus;
 
 
-use App\Interfaces\Bonus\AbstractBonus;
+use App\Services\Bonus\AbstractBonus;
 use App\Models\Bonus;
-use App\Models\User;
-use App\Models\UsersBonuses;
 use Illuminate\Support\Facades\Auth;
+
 
 class UserBonusService extends AbstractBonus
 {
+
+    /**
+     * UserBonusService constructor.
+     * @param Bonus $bonus
+     */
     public function __construct(Bonus $bonus)
     {
         parent::__construct($bonus);
     }
 
-
-    public function setBonus()
+    /**
+     * @return void
+     */
+    public function setBonus() : void
     {
-        UsersBonuses::query()->create([
-            'user_id' => Auth::user()->id,
-            'bonus_id' => $this->bonus->id
-            ]);
+        $this->bonus->user()->sync([Auth::user()->id]);
         if (self::isLimited())
         {
             $this->decrementCount();
-
         }
-
     }
 }

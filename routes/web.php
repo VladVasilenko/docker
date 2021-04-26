@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthSocial\SocialController;
+use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Profile\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
@@ -26,9 +27,7 @@ Route::middleware(['only.user'])->group(function () {
 });
 
 Route::middleware(['only.admin'])->prefix('dashboard')->group(function () {
-    Route::get('/', function () {
-        dd('admin');
-    })->name('dashboard.index');
+    Route::get('/', [DashboardController::class, 'index'] )->name('dashboard.index');
 });
 Route::middleware(['only.user'])->prefix('profile')->group(function () {
     Route::get('/', [ProfileController::class, 'index'] )->name('user.index');
