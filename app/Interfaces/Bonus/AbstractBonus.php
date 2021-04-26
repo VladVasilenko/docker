@@ -9,7 +9,9 @@ use App\Models\User;
 
 abstract class AbstractBonus implements BonusInterface
 {
+    /** @var string */
     protected $bonusName;
+    /** @var int */
     protected $availableCount;
     /** @var Bonus */
     protected $bonus;
@@ -50,13 +52,19 @@ abstract class AbstractBonus implements BonusInterface
         return $this->availableCount;
     }
 
-    public static function getBonus()
+    /**
+     * @return Bonus
+     */
+    public static function getBonus() : Bonus
     {
         return Bonus::query()->where('available_count','!=','0')->inRandomOrder()->first();
 
     }
 
-    public  function decrementCount()
+    /**
+     * @return mixed|void
+     */
+    public  function decrementCount() : void
     {
         $this->bonus->decrement('available_count');
     }

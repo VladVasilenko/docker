@@ -8,11 +8,34 @@ use App\Models\User;
 
 interface BonusInterface
 {
-    public function getName();
+    /**
+     * @return string
+     */
+    public function getName() : string;
+
+    /**
+     * @return mixed
+     */
     public function setBonus();
+
+    /**
+     * @return mixed
+     */
     public function isLimited();
-    public function getAvailableCount();
-    public static function getBonus();
+
+    /**
+     * @return int
+     */
+    public function getAvailableCount() : int;
+
+    /**
+     * @return Bonus
+     */
+    public static function getBonus() : Bonus ;
+
+    /**
+     * @return mixed
+     */
     public  function decrementCount();
 
 }
