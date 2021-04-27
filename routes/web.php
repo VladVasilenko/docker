@@ -31,6 +31,6 @@ Route::middleware(['only.admin'])->prefix('dashboard')->group(function () {
 });
 Route::middleware(['only.user'])->prefix('profile')->group(function () {
     Route::get('/', [ProfileController::class, 'index'] )->name('user.index');
-    Route::get('/get_bonus', [ProfileController::class, 'setBonus'] )->name('user.setBonus');
+    Route::get('/set_bonus', [ProfileController::class, 'setBonus'] )->name('user.setBonus');
 });
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
