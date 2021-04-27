@@ -10,7 +10,7 @@ use App\Services\SocialAuth\SocialAuthAbstract;
 class SocialController extends Controller
 {
     /* @var SocialAuthAbstract */
-    protected $class = 'facebook';
+    protected $class;
 
     protected $classes = [
         'facebook' => Facebook::class
