@@ -14,7 +14,7 @@ class UserBonusService
 {
 
     /**
-     * @param Bonus $bonus
+     * @param User $user
      * @return string
      */
     public function getName(User $user): string
@@ -58,10 +58,10 @@ class UserBonusService
     }
 
     /**
-     * @return Bonus
+     * @return Bonus|\Illuminate\Database\Eloquent\Builder|Model|object
      * @throws \Exception
      */
-    public static function getRandBonus() : Bonus
+    public static function getRandBonus()
     {
         $bonus = Bonus::query()->where('available_count', '!=', 0)
             ->inRandomOrder()->first();
