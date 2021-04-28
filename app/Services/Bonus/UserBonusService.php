@@ -30,8 +30,9 @@ class UserBonusService
      */
     public function apply(User $user,Bonus $bonus) : void
     {
-        if (!static::hasBonus($user)) {
+        if (!$this->hasBonus($user)) {
             $user->bonus()->attach($bonus->id);
+            $bonus->decrementCount();
         } else {
             throw new \Exception('У данного пользователя уже есть бонус');
         }
