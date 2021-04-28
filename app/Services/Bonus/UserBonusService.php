@@ -61,7 +61,7 @@ class UserBonusService
      * @return Bonus|\Illuminate\Database\Eloquent\Builder|Model|object
      * @throws \Exception
      */
-    public static function getRandBonus()
+    public function getRandBonus()
     {
         $bonus = Bonus::query()->where('available_count', '!=', 0)
             ->inRandomOrder()->first();
