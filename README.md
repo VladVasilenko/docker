@@ -22,51 +22,66 @@
 
 Перейдите в папку проекта
 
-    cd BarProject
+    cd docker
 
-Установите все зависимости, используя composer
+**Настройка .env приложения**
 
-    composer install
-
-Скопируйте пример файла env и внесите необходимые изменения конфигурации в файл .env.
+Скопируйте файл .env.example в .env
 
     cp .env.example .env
 
-Сгенерируйте новый ключ приложения
+Найдите блок, задающий DB_CONNECTION и обновите его для отражения особенностей настройки вашей системы. Вы измените следующие поля:
 
-    php artisan key:generate
+    - DB_HOST будет вашим контейнером базы данных db.
+    - DB_DATABASE будет базой данных laravel.
+    - DB_USERNAME будет именем пользователя для вашей базы данных. В этом случае мы будем использовать laraveluser.
+    - DB_PASSWORD будет защищенным паролем для этой учетной записи пользователя.
 
-Запустите миграцию базы данных (**Установите соединение с базой данных в .env перед миграцией**)
+Сконфигурируйте параметры FB_CLIENT_ID и FB_SECRET_ID согласно вашим настройкам Facebook Development Oauth
+[Официальная документация](https://developers.facebook.com/docs/graph-api/)
 
-    php artisan migrate
+    FB_CLIENT_ID=client_id
+    FB_SECRET_ID=secret_id
+
+Разверните докер-контейнер командой:  
+
+    docker-compose up -d
+
+Следующая команда будет генерировать ключ и скопирует его в файл .env, гарантируя безопасность сеансов пользователя и шифрованных данных
+
+    docker-compose exec app php artisan key:generate
+
+Установите все зависимости, используя composer
+
+    docker-compose exec app composer install
+
+Чтобы создать нового пользователя, запустите интерактивную оболочку bash в контейнере db с помощью команды docker-compose exec
+
+    docker-compose exec db bash
+
+Выполните внутри контейнера вход в административную учетную запись MySQL root:
+
+    mysql -u root -p
+
+Затем создайте учетную запись пользователя, которой будет разрешен доступ к этой базе данных. Как пример используем имя пользователя laraveluser, но вы можете заменить его любым предпочитаемым именем. Просто убедитесь, что имя пользователя и пароль соответствуют заданным в файле .env на предыдущем шаге:
+
+    GRANT ALL ON laravel.* TO 'laraveluser'@'%' IDENTIFIED BY 'your_laravel_db_password';
+
+Обновите привилегии, чтобы уведомить сервер MySQL об изменениях:
+
+    FLUSH PRIVILEGES;
+
+Закройте MySQL и выйдите из контейнера поочередно вводя команду exit
+    
+    EXIT
+
+Запустите миграцию базы данных (вместе с seed's) (**Установите соединение с базой данных в .env перед миграцией**)
+
+    docker-compose exec app php artisan migrate:fresh --seed
 
 Сборка фронтенда (Laravel Mix)
 
     npm install && npm run development
-
-**TL;DR Список команд**
-
-    git clone git@github.com:VladVasilenko/BarProject.git
-    cd BarProject
-    composer install
-    cp .env.example .env
-    php artisan key:generate
-
-**Убедитесь, что вы верно сконфигурировали переменные окружения согласно вашей базы данных перед запуском миграции** [Переменные среды](#переменные-среды)
-
-    php artisan migrate
-
-## Заполнение базы данных
-
-**Заполните базу данных исходными данными, которые включают тестового пользователя и жанры музыки.**
-
-Запустите команду для наполнения базы данных данными
-
-    php artisan db:seed
-
-***Примечание*** : Рекомендуется иметь чистую базу данных перед заполнением. Вы можете обновить свои миграции в любой момент, чтобы очистить базу данных, выполнив следующую команду
-
-    php artisan migrate:refresh
 
 ## API Спецификация
 
@@ -85,7 +100,7 @@
 
 - `app/Models` - Содержит все модели Eloquent
 - `app/Http/Controllers/Api` - Содержит Api контроллер
-- `app/Services` - Содержит сервис для обработки логики бара
+- `app/Services` - Содержит сервисы для обработки логики 
 - `database/factories` - Содержит фабрику моделей для всех моделей
 - `database/migrations` - Содержит все миграции базы данных
 - `database/seeds` - Содержит seeds базы данных
@@ -101,90 +116,22 @@
 
 # Тестирование API
 
-Состояние бара можно получить по адресу
+Список пользователей можно получить по адресу
 
-    https://host/api/bar?api_token=5of1CgNeLd8gMdkKoBUxzfn3mbdukBWkPU7rwF2l8hDBZFa196CAdF31vP1VfzmkCwfZkZENjL42LAaU
+    http://localhost:8080/api/users
 
-***Примечание***: api_token задан в seed Пользователя и хранится в открытом виде для демонстрации функционала. Правильное использование api_token описано в [официальной документации](https://laravel.com/docs/6.x/api-authentication)
+***Примечание***: acceskey хранится в .env. Для доступа к api его необходимо передвать в header запроса с ключом 'ACCESSKEY'
 
 ##Пример ответа сервера
 
 ```json
-{
-    "id": 1,
-    "name": "ut",
-    "music_id": 1,
-    "visitors": [
-        {
-            "id": 1,
-            "bar_id": 1,
-            "name": "Dr. Ulises Wolf",
-            "action_name": "Пьет",
-            "musics": [
-                {
-                    "id": 2,
-                    "name": "Поп",
-                    "pivot": {
-                        "visitor_id": 1,
-                        "music_id": 2
-                    }
-                },
-                {
-                    "id": 3,
-                    "name": "Джаз",
-                    "pivot": {
-                        "visitor_id": 1,
-                        "music_id": 3
-                    }
-                },
-                {
-                    "id": 5,
-                    "name": "Электро",
-                    "pivot": {
-                        "visitor_id": 1,
-                        "music_id": 5
-                    }
-                }
-            ]
-        },
-        {
-            "id": 4,
-            "bar_id": 1,
-            "name": "Prof. Cathryn Lesch MD",
-            "action_name": "Танцует",
-            "musics": [
-                {
-                    "id": 1,
-                    "name": "Рок",
-                    "pivot": {
-                        "visitor_id": 4,
-                        "music_id": 1
-                    }
-                },
-                {
-                    "id": 3,
-                    "name": "Джаз",
-                    "pivot": {
-                        "visitor_id": 4,
-                        "music_id": 3
-                    }
-                },
-                {
-                    "id": 5,
-                    "name": "Электро",
-                    "pivot": {
-                        "visitor_id": 4,
-                        "music_id": 5
-                    }
-                }
-            ]
-        }
-    ],
-    "music": {
-        "id": 1,
-        "name": "Рок"
+[
+    {
+        "id": 2,
+        "register_at": "2021-04-26T16:00:35.000000Z",
+        "bonusName": "Кружка с логотипом BioData"
     }
-}
+]
 ```
 
 
