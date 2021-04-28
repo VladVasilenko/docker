@@ -21,13 +21,12 @@ class ProfileController extends Controller
 
     public function index()
     {
-
       return view('profile.profile', ['info' => $this->service->info()]);
     }
 
-    public function setBonus()
+    public function getBonus()
     {
-        $this->service->setBonus();
+        $this->service->getBonus();
         return $this->index();
     }
 }

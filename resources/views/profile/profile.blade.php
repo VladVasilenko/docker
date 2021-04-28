@@ -15,7 +15,7 @@
     Выйти
 </a>
 @if(!$info->hasBonus)
-    <a href="{{ route('user.setBonus') }}">
+    <a href="{{ route('user.getBonus') }}">
         Получить бонус
     </a>
     @endif
