@@ -4,32 +4,67 @@
 namespace App\Services\Bonus;
 
 
-use App\Services\Bonus\AbstractBonus;
 use App\Models\Bonus;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
 
-class UserBonusService extends AbstractBonus
+class UserBonusService
 {
 
     /**
-     * UserBonusService constructor.
      * @param Bonus $bonus
+     * @return string
      */
-    public function __construct(Bonus $bonus)
+    public function getName(User $user): string
     {
-        parent::__construct($bonus);
+        $bonusId = $user->bonus()->first()->id;
+        return __('bonuses.names.' . $bonusId);
     }
 
     /**
-     * @return void
+     * @param User $user
+     * @param Bonus $bonus
+     * @throws \Exception
      */
-    public function setBonus() : void
+    public function apply(User $user,Bonus $bonus) : void
     {
-        $this->bonus->user()->sync([Auth::user()->id]);
-        if (self::isLimited())
-        {
-            $this->decrementCount();
+        if (!static::hasBonus($user)) {
+            $user->bonus()->attach($bonus->id);
+        } else {
+            throw new \Exception('У данного пользователя уже есть бонус');
+        }
+
+    }
+
+    public static function hasBonus(User $user) : bool
+    {
+        return $user->bonus()->exists();
+    }
+
+    /**
+     * @param Bonus $bonus
+     * @return int
+     */
+    public function getAvailableCount(Bonus $bonus): int
+    {
+        return (int)$bonus->available_count;
+    }
+
+    /**
+     * @return Bonus
+     * @throws \Exception
+     */
+    public static function getRandBonus() : Bonus
+    {
+        $bonus = Bonus::query()->where('available_count', '!=', 0)
+            ->inRandomOrder()->first();
+        if (!is_null($bonus)) {
+            return $bonus;
+        } else {
+            throw new \Exception('Доступного бонуса нет');
         }
     }
+
 }

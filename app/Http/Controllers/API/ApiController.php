@@ -5,13 +5,20 @@ namespace App\Http\Controllers\API;
 
 
 use App\Http\Controllers\Controller;
-use App\Services\DashboardService\DashboardService;
+use App\Services\Dashboard\DashboardService;
 
 class ApiController extends Controller
 {
+    public $service;
+
+    public function __construct()
+    {
+        $this->service = new DashboardService();
+    }
     public function getUsers()
     {
-        $users = DashboardService::info();
+
+        $users = $this->service->info();
         return response()->json($users);
     }
 

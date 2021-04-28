@@ -4,6 +4,8 @@
 namespace App\Services\SocialAuth;
 
 
+use App\Enums\SocialNetworks;
+use App\Enums\SocialTypeId;
 use App\Models\User;
 use App\Models\UserSocial;
 use Illuminate\Support\Facades\Auth;
@@ -14,14 +16,14 @@ use Exception;
 
 abstract class SocialAuthAbstract
 {
-    protected static $socialNetwork;
+    abstract public function getSocialNetwork() : string ;
 
-    protected static $socialTypeId;
+    abstract public function getSocialType () : string;
 
-    public static function login()
+    public function login()
     {
         try {
-            $socialUser = Socialite::driver(static::$socialNetwork)->user();
+            $socialUser = Socialite::driver($this->getSocialNetwork())->user();
             session(['user_token' => $socialUser->token]);
         } catch (\Exception $e) {
             return redirect('/login');
@@ -35,7 +37,7 @@ abstract class SocialAuthAbstract
             $user = User::create();
             $user->socials()->create([
                 'social_id' => $socialUser->id,
-                'social_type' => static::$socialTypeId,
+                'social_type' => $this->getSocialType(),
             ]);
         }
 
@@ -44,9 +46,9 @@ abstract class SocialAuthAbstract
 
     }
 
-    public static function redirectForAuth()
+    public function redirectForAuth()
     {
-        return Socialite::driver(static::$socialNetwork)->redirect();
+        return Socialite::driver($this->getSocialNetwork())->redirect();
     }
 
 }

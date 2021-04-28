@@ -1,25 +1,34 @@
 <?php
 
 
-namespace App\Services\DashboardService;
+namespace App\Services\Dashboard;
 
 
 use App\Models\Bonus;
 use App\Models\User;
+use App\Services\Bonus\AbstractBonus;
+use App\Services\Bonus\UserBonus;
 use App\Services\Bonus\UserBonusService;
 
 class DashboardService
 {
+    public $bonusService;
+
+    public function __construct()
+    {
+        $this->bonusService = new UserBonusService();
+    }
+
     /**
      * @return object
      */
-    public static function info() : object
+    public  function info() : object
     {
         $users = User::where('is_admin',false)->with('bonus')->get();
 
         return  $users->map(function ($user) {
             return collect($user)
-                ->put('bonusName',((new UserBonusService($user->bonus[0]))->bonusName))
+                ->put('bonusName', $this->bonusService->getName($user))
                 ->only('id','register_at','bonusName')
                 ->all();
         });

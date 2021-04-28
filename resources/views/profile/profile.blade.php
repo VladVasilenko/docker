@@ -5,6 +5,8 @@
 <p>ФИО: {{$info->userName}}</p>
 <p>E-mail: {{$info->userEmail}}</p>
 <p>Фото:<img src="{{$info->userPhoto}}"></p>
+<p>Бонус:{{$info->bonusName}}</p>
+
 
 
 <a href="{{ route('logout') }}"
@@ -16,8 +18,6 @@
     <a href="{{ route('user.setBonus') }}">
         Получить бонус
     </a>
-    @else
-    <p>Бонус:{{$info->hasBonus}}</p>
     @endif
 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
     @csrf

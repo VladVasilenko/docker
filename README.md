@@ -7,56 +7,185 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+# Тестовое задание "BioData"
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+----------
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+# Начало
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-## Learning Laravel
+## Установка
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Склонируйте репозиторий
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+    git clone git@github.com:VladVasilenko/docker.git
 
-## Laravel Sponsors
+Перейдите в папку проекта
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+    cd BarProject
 
-### Premium Partners
+Установите все зависимости, используя composer
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
+    composer install
 
-## Contributing
+Скопируйте пример файла env и внесите необходимые изменения конфигурации в файл .env.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+    cp .env.example .env
 
-## Code of Conduct
+Сгенерируйте новый ключ приложения
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+    php artisan key:generate
 
-## Security Vulnerabilities
+Запустите миграцию базы данных (**Установите соединение с базой данных в .env перед миграцией**)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+    php artisan migrate
 
-## License
+Сборка фронтенда (Laravel Mix)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+    npm install && npm run development
+
+**TL;DR Список команд**
+
+    git clone git@github.com:VladVasilenko/BarProject.git
+    cd BarProject
+    composer install
+    cp .env.example .env
+    php artisan key:generate
+
+**Убедитесь, что вы верно сконфигурировали переменные окружения согласно вашей базы данных перед запуском миграции** [Переменные среды](#переменные-среды)
+
+    php artisan migrate
+
+## Заполнение базы данных
+
+**Заполните базу данных исходными данными, которые включают тестового пользователя и жанры музыки.**
+
+Запустите команду для наполнения базы данных данными
+
+    php artisan db:seed
+
+***Примечание*** : Рекомендуется иметь чистую базу данных перед заполнением. Вы можете обновить свои миграции в любой момент, чтобы очистить базу данных, выполнив следующую команду
+
+    php artisan migrate:refresh
+
+## API Спецификация
+
+Это приложение имеет REST API для получения текущего состояния бара с его посетителями
+
+    Пример api-запроса : https://host/api/bar?api_token=5of1CgNeLd8gMdkKoBUxzfn3mbdukBWkPU7rwF2l8hDBZFa196CAdF31vP1VfzmkCwfZkZENjL42LAaU
+
+***Примечание*** : Api был сделан на "скорую руку" с опущением соблюдения требований безопасности и токен хранится в открытом виде для демонстрации функционала.
+
+
+----------
+
+# Code overview
+
+## Папки
+
+- `app/Models` - Содержит все модели Eloquent
+- `app/Http/Controllers/Api` - Содержит Api контроллер
+- `app/Services` - Содержит сервис для обработки логики бара
+- `database/factories` - Содержит фабрику моделей для всех моделей
+- `database/migrations` - Содержит все миграции базы данных
+- `database/seeds` - Содержит seeds базы данных
+- `routes` - Содержит все маршруты приложения
+
+## Переменные среды
+
+- `.env` - В этом файле можно установить переменные среды
+
+***Примечание***: Вы можете задать информацию о базе данных и другие переменные в этом файле, и приложение будет полностью работать.
+
+----------
+
+# Тестирование API
+
+Состояние бара можно получить по адресу
+
+    https://host/api/bar?api_token=5of1CgNeLd8gMdkKoBUxzfn3mbdukBWkPU7rwF2l8hDBZFa196CAdF31vP1VfzmkCwfZkZENjL42LAaU
+
+***Примечание***: api_token задан в seed Пользователя и хранится в открытом виде для демонстрации функционала. Правильное использование api_token описано в [официальной документации](https://laravel.com/docs/6.x/api-authentication)
+
+##Пример ответа сервера
+
+```json
+{
+    "id": 1,
+    "name": "ut",
+    "music_id": 1,
+    "visitors": [
+        {
+            "id": 1,
+            "bar_id": 1,
+            "name": "Dr. Ulises Wolf",
+            "action_name": "Пьет",
+            "musics": [
+                {
+                    "id": 2,
+                    "name": "Поп",
+                    "pivot": {
+                        "visitor_id": 1,
+                        "music_id": 2
+                    }
+                },
+                {
+                    "id": 3,
+                    "name": "Джаз",
+                    "pivot": {
+                        "visitor_id": 1,
+                        "music_id": 3
+                    }
+                },
+                {
+                    "id": 5,
+                    "name": "Электро",
+                    "pivot": {
+                        "visitor_id": 1,
+                        "music_id": 5
+                    }
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "bar_id": 1,
+            "name": "Prof. Cathryn Lesch MD",
+            "action_name": "Танцует",
+            "musics": [
+                {
+                    "id": 1,
+                    "name": "Рок",
+                    "pivot": {
+                        "visitor_id": 4,
+                        "music_id": 1
+                    }
+                },
+                {
+                    "id": 3,
+                    "name": "Джаз",
+                    "pivot": {
+                        "visitor_id": 4,
+                        "music_id": 3
+                    }
+                },
+                {
+                    "id": 5,
+                    "name": "Электро",
+                    "pivot": {
+                        "visitor_id": 4,
+                        "music_id": 5
+                    }
+                }
+            ]
+        }
+    ],
+    "music": {
+        "id": 1,
+        "name": "Рок"
+    }
+}
+```
+
+
+
