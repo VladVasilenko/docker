@@ -43,6 +43,11 @@
     FB_CLIENT_ID=client_id
     FB_SECRET_ID=secret_id
 
+В Facebook в настройках вашего приложения oauth укажите(Ваше приложение->Настройки->Основное):
+
+    url-адрес сайта: http://localhost:8080/
+    домены приложений: localhost
+
 Разверните докер-контейнер командой:  
 
     docker-compose up -d
