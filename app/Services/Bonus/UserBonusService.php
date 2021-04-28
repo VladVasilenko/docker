@@ -38,7 +38,7 @@ class UserBonusService
 
     }
 
-    public static function hasBonus(User $user) : bool
+    public function hasBonus(User $user) : bool
     {
         return $user->bonus()->exists();
     }

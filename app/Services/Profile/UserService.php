@@ -42,7 +42,7 @@ class UserService
     public function getBonus() : void
     {
         $user = Auth::user();
-        if (!$this->bonusService::hasBonus($user)) {
+        if (!$this->bonusService->hasBonus($user)) {
             $bonus = $this->bonusService::getRandBonus();
             $this->bonusService->apply($user,$bonus);
         }
