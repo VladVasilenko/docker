@@ -20,6 +20,9 @@ abstract class SocialAuthAbstract
 
     abstract public function getSocialType () : string;
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|void
+     */
     public function login()
     {
         try {
@@ -46,7 +49,10 @@ abstract class SocialAuthAbstract
 
     }
 
-    public function redirectForAuth()
+    /**
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function redirectForAuth(): \Symfony\Component\HttpFoundation\RedirectResponse
     {
         return Socialite::driver($this->getSocialNetwork())->redirect();
     }

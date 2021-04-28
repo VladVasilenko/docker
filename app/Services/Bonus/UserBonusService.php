@@ -38,6 +38,11 @@ class UserBonusService
 
     }
 
+    /**
+     * @param User $user
+     * @return bool
+     */
+
     public function hasBonus(User $user) : bool
     {
         return $user->bonus()->exists();

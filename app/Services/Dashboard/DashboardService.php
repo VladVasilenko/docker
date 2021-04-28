@@ -12,6 +12,7 @@ use App\Services\Bonus\UserBonusService;
 
 class DashboardService
 {
+    /** @var UserBonusService  */
     public $bonusService;
 
     public function __construct()

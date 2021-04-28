@@ -11,7 +11,7 @@ use Laravel\Socialite\Facades\Socialite;
 
 class ProfileController extends Controller
 {
-
+    /** @var UserService  */
     public $service;
 
     public function __construct()

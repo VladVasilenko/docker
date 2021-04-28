@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 class DashboardController extends Controller
 {
 
+    /** @var DashboardService  */
     public $service;
 
     public function __construct()

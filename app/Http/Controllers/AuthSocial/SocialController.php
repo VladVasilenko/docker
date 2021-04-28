@@ -20,11 +20,17 @@ class SocialController extends Controller
         $this->socialAuthService = SocialAuthServiceFactory::make($request->socialNetwork);
     }
 
-    public function redirect()
+    /**
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function redirect(): \Symfony\Component\HttpFoundation\RedirectResponse
     {
         return $this->socialAuthService->redirectForAuth();
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|void
+     */
     public function loginWith()
     {
         return $this->socialAuthService->login();

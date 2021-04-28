@@ -13,6 +13,7 @@ use phpDocumentor\Reflection\Types\Mixed_;
 
 class UserService
 {
+    /** @var UserBonusService  */
     public $bonusService;
 
     public function __construct()
