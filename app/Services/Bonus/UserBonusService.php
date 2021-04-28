@@ -65,6 +65,7 @@ class UserBonusService
     public function getRandBonus()
     {
         $bonus = Bonus::query()->where('available_count', '!=', 0)
+            ->orWhere('available_count','=',null)
             ->inRandomOrder()->first();
         if (!is_null($bonus)) {
             return $bonus;
