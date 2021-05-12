@@ -15,9 +15,9 @@ class UserService
 {
     public $bonusService;
 
-    public function __construct()
+    public function __construct(UserBonusService $bonusService)
     {
-        $this->bonusService = new UserBonusService();
+        $this->bonusService = $bonusService;
     }
 
     /**

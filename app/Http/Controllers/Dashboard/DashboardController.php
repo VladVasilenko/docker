@@ -12,9 +12,9 @@ class DashboardController extends Controller
 
     public $service;
 
-    public function __construct()
+    public function __construct(DashboardService $service)
     {
-        $this->service = new DashboardService();
+        $this->service = $service;
     }
 
     public function index() {

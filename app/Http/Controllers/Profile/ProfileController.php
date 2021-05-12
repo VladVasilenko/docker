@@ -14,9 +14,9 @@ class ProfileController extends Controller
 
     public $service;
 
-    public function __construct()
+    public function __construct(UserService $service)
     {
-        $this->service = new UserService();
+        $this->service = $service;
     }
 
     public function index()
